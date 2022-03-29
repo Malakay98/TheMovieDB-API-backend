@@ -34,7 +34,6 @@ export const addMovieToFav = (req, res) => {
     } else {
       // Request the id inside the body
       const movie = req.body.id;
-      // console.log(movie)
       const url_movie_id = `https://api.themoviedb.org/3/movie/${movie}?${API_KEY}&language=en-US`;
       // fetch the url
       await fetch(url_movie_id)
@@ -52,7 +51,6 @@ export const addMovieToFav = (req, res) => {
                 id: movie,
                 title: data.title,
               };
-              console.log(movies);
               // Check if the movie already exist
               if (movies.find((m) => m.id === newMovie.id)) {
                 return res
@@ -75,44 +73,17 @@ function getMovies(url) {
   return new Promise((resolve) => {
     fetch(url)
       .then((res) => {
-        // console.log(res);
         return res.json();
       })
       .then((data) => {
-        // console.log(data.results);
-        function Beetwen() {
-          // return an integer value beetwen 1 and 17
-          return Math.floor(Math.random() * (17 - 1) + 1);
-        }
-        for (let movie = 0; movie <= data.results[10].title.length; movie++) {
-          let movie1 = data.results[0].title;
-          let movie2 = data.results[1].title;
-          let movie3 = data.results[3].title;
-          let movie4 = data.results[4].title;
-          let movie5 = data.results[5].title;
-          let movie6 = data.results[6].title;
-          let movie7 = data.results[7].title;
-          let movie8 = data.results[8].title;
-          let movie9 = data.results[9].title;
-          let movie10 = data.results[10].title;
-          // Return a random movie
-          let movieRandom = data.results[Beetwen()].title;
-          let allMovies = [
-            movie1,
-            movie2,
-            movie3,
-            movie4,
-            movie5,
-            movie6,
-            movie7,
-            movie8,
-            movie9,
-            movie10,
-            "Here you have a suggested movie: " + movieRandom,
-          ];
-          resolve(allMovies);
-          console.log("Movie: " + data.results[movie].title);
-        }
+        // I use map with object destructuring to select the specific properties that i want
+        let result = data.results.map(element => {
+          return {
+            id: element.id,
+            title: element.title
+          }
+        })
+        resolve(result)
       })
       .catch((err) => {
         return err;

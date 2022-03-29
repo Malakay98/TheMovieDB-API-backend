@@ -17,7 +17,7 @@ app.use(express.json());
 app.use("/users", usersRoutes);
 
 // Setup the api movies routes
-app.use('/movies', moviesRoutes);
+app.use("/movies", moviesRoutes);
 
 app.use((req, res) => {
   res.status(404);

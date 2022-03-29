@@ -11,10 +11,10 @@ router.get("/", searchAllUsers);
 router.post("/", createUser);
 
 // Login of the user
-router.post('/login', loginUser);
+router.post("/login", loginUser);
 
 // Logout
-router.patch('/logout', validateToken, logoutUser);
+router.patch("/logout", validateToken, logoutUser);
 
 
 export default router;

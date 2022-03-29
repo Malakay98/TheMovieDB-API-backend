@@ -122,7 +122,6 @@ function generateAccessToken(user) {
 export function validateToken(req, res, next) {
   // Get auth header value
   const bearerHead = req.headers["authorization"];
-  console.log(bearerHead.length)
   if (typeof bearerHead === "undefined" || bearerHead.length !== 204) {
     // Forbidden
     res.status(403).json("You don't have permission to access, you're TOKEN is invalid");
