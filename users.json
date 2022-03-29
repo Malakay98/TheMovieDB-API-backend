@@ -1,0 +1,30 @@
+[
+    {
+        "id": "63669af7-6e12-4e16-b774-46a873b1744a",
+        "email": "mugiwara@gmail.com",
+        "firstName": "Luffy",
+        "lastName": "Monkey",
+        "password": "gomugomu"
+    },
+    {
+        "id": "333bd31d-253d-43c9-be0b-8037d1253ead",
+        "email": "shirohige@gmail.com",
+        "firstName": "Ace",
+        "lastName": "Portgas",
+        "password": "meramera"
+    },
+    {
+        "id": "426da2c4-637e-4a8c-986a-0032becbe78b",
+        "email": "kuroashiSanji@gmail.com",
+        "firstName": "Sanji",
+        "lastName": "Vinsmoke",
+        "password": "namirobin"
+    },
+    {
+        "id": "557587ac-0953-4911-b5bc-2428b7246c29",
+        "email": "golDroger@gmail.com",
+        "firstName": "Gol",
+        "lastName": "Roger",
+        "password": "onepiece"
+    }
+]
