@@ -3,8 +3,10 @@ import JWT from "jsonwebtoken";
 import "dotenv/config";
 import fetch from "node-fetch";
 
-// File where is the data
+// File where is the data about movies
 const filePath2 = "./favMovies.json";
+// File where is the data about users
+const filePath = "./users.json";
 
 const API_KEY = "api_key=77787911a95eb6cc9e954c624d769dd0";
 
@@ -32,7 +34,16 @@ export const addMovieToFav = (req, res) => {
       // Fordibben
       res.status(403);
     } else {
-      // Request the id inside the body
+      // Request the bearer from the header
+      const bearerHead = req.headers.authorization;
+      // Split the bearer to get the token
+      let base64Url = bearerHead.split(".")[1];
+      let base64 = base64Url.replace("-", "+").replace("_", "/");
+      // Get the payload of the token
+      let decodedData = JSON.parse(
+        Buffer.from(base64, "base64").toString("binary")
+      );
+      // Request the id of the movie inside the body
       const movie = req.body.id;
       const url_movie_id = `https://api.themoviedb.org/3/movie/${movie}?${API_KEY}&language=en-US`;
       // fetch the url
@@ -46,21 +57,21 @@ export const addMovieToFav = (req, res) => {
             fs.readFile(filePath2, "utf-8", (err, dataM) => {
               // Convert the data into a Array
               let movies = dataM ? JSON.parse(dataM) : [];
-              // Create a variable that contains the id in the body and the title of that id
-              let newMovie = {
+              // Create a variable that contains the fav movie of a user
+              let newMovie = ({
+                email: decodedData.email,
                 id: movie,
                 title: data.title,
-              };
-              // Check if the movie already exist
-              if (movies.find((m) => m.id === newMovie.id)) {
+              });
+              // Check if a user already have a movie in his list
+              if (movies.find((m) => m.email === newMovie.email)) {
                 return res
                   .status(400)
-                  .send(`${data.title} is already in favorite list`);
+                  .send(`${decodedData.email}, you already have ${data.title} in your favorite list`);
               }
               movies.push(newMovie);
-              // movies.push(data.title);
               fs.writeFile(filePath2, JSON.stringify(movies), (err) => {
-                res.send(`Movie ${data.title} added to favorite list`);
+                res.send(`${decodedData.email} add ${data.title} to his favorite list`);
               });
             });
           }
@@ -77,13 +88,13 @@ function getMovies(url) {
       })
       .then((data) => {
         // I use map with object destructuring to select the specific properties that i want
-        let result = data.results.map(element => {
+        let result = data.results.map((element) => {
           return {
             id: element.id,
-            title: element.title
-          }
-        })
-        resolve(result)
+            title: element.title,
+          };
+        });
+        resolve(result);
       })
       .catch((err) => {
         return err;

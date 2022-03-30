@@ -13,7 +13,7 @@ const Regex =
 export const searchAllUsers = (req, res) => {
   fs.readFile(filePath, "utf-8", (err, data) => {
     if (err) {
-      console.log(`Error: ${err}`);
+      return(`Error: ${err}`);
     }
     res.end(`Here all users: ${data}`);
   });
@@ -57,12 +57,12 @@ export const createUser = (req, res, next) => {
   fs.readFile(filePath, "utf-8", (err, data) => {
     // Convert the data inside the filepath into a object, else equals to an empty object
     let users = data ? JSON.parse(data) : [];
-    console.log(users);
     // Check if email is already in use
     if (users.find((u) => u.email === newUser.email)) {
       return res.status(400).send("Email already in use, try again");
     }
     users.push(newUser);
+    // Append the user to the file
     fs.writeFile(filePath, JSON.stringify(users), (err) => {
       if (err) throw err;
       res.send(
@@ -89,12 +89,11 @@ export const loginUser = (req, res) => {
       return res.header("authorization", tokenAcces).json({
         message: "Login successful!",
         token: tokenAcces,
+        user: user
       });
     } else {
       res.status(400).send("User doesn't exist");
     }
-    console.log(user.email);
-    console.log(user.password);
   });
 };
 
@@ -102,7 +101,6 @@ export const loginUser = (req, res) => {
 export const logoutUser = (req, res) => {
   const bearerHead = req.headers.authorization;
   const bearer = bearerHead.split(" ")[1];
-  console.log(bearer);
   JWT.sign(bearer, " ", { expiresIn: 1 }, (logout, err) => {
     if (logout) {
       res.send({ msg: "You have been Logged Out" });
@@ -122,7 +120,7 @@ function generateAccessToken(user) {
 export function validateToken(req, res, next) {
   // Get auth header value
   const bearerHead = req.headers["authorization"];
-  if (typeof bearerHead === "undefined" || bearerHead.length !== 204) {
+  if (typeof bearerHead === "undefined" || bearerHead !== req.headers["authorization"]) {
     // Forbidden
     res.status(403).json("You don't have permission to access, you're TOKEN is invalid");
   } else {
