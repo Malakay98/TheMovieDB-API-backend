@@ -89,9 +89,11 @@ function getMovies(url) {
       .then((data) => {
         // I use map with object destructuring to select the specific properties that i want
         let result = data.results.map((element) => {
+          var suggestionScore = Math.floor(Math.random() * (99 - 0)) + 0;
           return {
             id: element.id,
             title: element.title,
+            suggestionScore: suggestionScore
           };
         });
         resolve(result);

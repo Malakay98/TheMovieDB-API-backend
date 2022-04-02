@@ -1,1 +1,17 @@
-[{"email":"shirohige@gmail.com","id":568012,"title":"One Piece: Stampede"},{"email":"kuroashiSanji@gmail.com","id":568012,"title":"One Piece: Stampede"},{"email":"frank_98@gmail.com","id":568012,"title":"One Piece: Stampede"}]
+[
+    {
+        "email": "shirohige@gmail.com",
+        "id": 568012,
+        "title": "One Piece: Stampede"
+    },
+    {
+        "email": "kuroashiSanji@gmail.com",
+        "id": 568012,
+        "title": "One Piece: Stampede"
+    },
+    {
+        "email": "frank_98@gmail.com",
+        "id": 568012,
+        "title": "One Piece: Stampede"
+    }
+]
