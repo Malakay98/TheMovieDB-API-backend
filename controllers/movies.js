@@ -58,20 +58,24 @@ export const addMovieToFav = (req, res) => {
               // Convert the data into a Array
               let movies = dataM ? JSON.parse(dataM) : [];
               // Create a variable that contains the fav movie of a user
-              let newMovie = ({
+              let newMovie = {
                 email: decodedData.email,
                 id: movie,
                 title: data.title,
-              });
+              };
               // Check if a user already have a movie in his list
               if (movies.find((m) => m.email === newMovie.email)) {
                 return res
                   .status(400)
-                  .send(`${decodedData.email}, you already have ${data.title} in your favorite list`);
+                  .send(
+                    `${decodedData.email}, you already have ${data.title} in your favorite list`
+                  );
               }
               movies.push(newMovie);
               fs.writeFile(filePath2, JSON.stringify(movies), (err) => {
-                res.send(`${decodedData.email} add ${data.title} to his favorite list`);
+                res.send(
+                  `${decodedData.email} add ${data.title} to his favorite list`
+                );
               });
             });
           }
@@ -89,14 +93,20 @@ function getMovies(url) {
       .then((data) => {
         // I use map with object destructuring to select the specific properties that i want
         let result = data.results.map((element) => {
-          var suggestionScore = Math.floor(Math.random() * (99 - 0)) + 0;
+          // Get a random number beetwen 0 and 99
+          var suggestionScore = Math.floor(Math.random() * (99 - 0) + 0);
           return {
             id: element.id,
             title: element.title,
-            suggestionScore: suggestionScore
+            suggestionScore: suggestionScore,
           };
         });
-        resolve(result);
+        // Sort the array by suggestionScoreValue
+        let resultSortedBySC = result.sort(
+          (a, b) =>
+            parseFloat(b.suggestionScore) - parseFloat(a.suggestionScore)
+        );
+        resolve(resultSortedBySC);
       })
       .catch((err) => {
         return err;
