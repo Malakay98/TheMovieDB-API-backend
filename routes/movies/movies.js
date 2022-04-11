@@ -1,12 +1,12 @@
 import express from "express"
 import {searchMovies, addMovieToFav} from "../../controllers/movies.js";
-import { validateToken } from "../../controllers/users.js";
+import { validateToken, validateJWT } from "../../controllers/users.js";
 
 const router = express.Router();
 
 // All routes here start with /movies
-router.get('/', validateToken, searchMovies)
+router.get('/', validateJWT, searchMovies)
 
-router.post('/', validateToken, addMovieToFav)
+router.post('/', validateJWT, addMovieToFav)
 
 export default router;

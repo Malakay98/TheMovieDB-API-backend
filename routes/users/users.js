@@ -1,5 +1,5 @@
 import express from "express";
-import { createUser, loginUser, searchAllUsers, validateToken, logoutUser} from "../../controllers/users.js";
+import { createUser, loginUser, searchAllUsers, logoutUser, validateJWT} from "../../controllers/users.js";
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ router.post("/", createUser);
 router.post("/login", loginUser);
 
 // Logout
-router.patch("/logout", validateToken, logoutUser);
+router.patch("/logout", validateJWT, logoutUser);
 
 
 export default router;

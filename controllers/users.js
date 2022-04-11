@@ -1,4 +1,3 @@
-import express from "express";
 import { v4 as uuidv4 } from "uuid";
 import fs, { existsSync, readFile } from "fs";
 import JWT from "jsonwebtoken";
@@ -13,7 +12,7 @@ const Regex =
 export const searchAllUsers = (req, res) => {
   fs.readFile(filePath, "utf-8", (err, data) => {
     if (err) {
-      return(`Error: ${err}`);
+      return `Error: ${err}`;
     }
     res.end(`Here all users: ${data}`);
   });
@@ -89,7 +88,7 @@ export const loginUser = (req, res) => {
       return res.header("authorization", tokenAcces).json({
         message: "Login successful!",
         token: tokenAcces,
-        user: user
+        user: user,
       });
     } else {
       res.status(400).send("User doesn't exist");
@@ -120,9 +119,14 @@ function generateAccessToken(user) {
 export function validateToken(req, res, next) {
   // Get auth header value
   const bearerHead = req.headers["authorization"];
-  if (typeof bearerHead === "undefined" || bearerHead !== req.headers["authorization"]) {
+  if (
+    typeof bearerHead === "undefined" ||
+    bearerHead !== req.headers["authorization"]
+  ) {
     // Forbidden
-    res.status(403).json("You don't have permission to access, you're TOKEN is invalid");
+    res
+      .status(403)
+      .json("You don't have permission to access, you're TOKEN is invalid");
   } else {
     // Split at the space
     const bearer = bearerHead.split(" ");
@@ -132,5 +136,37 @@ export function validateToken(req, res, next) {
     req.token = bearerToken;
     // Next middleware
     next();
+  }
+}
+
+// Validate the token for user interactions
+// Authorization: Bearer <token>
+export function validateJWT(req, res, next) {
+  // Get the auth header value
+  let bearerHead = req.headers["authorization"];
+  if (
+    typeof bearerHead === "undefined" ||
+    bearerHead !== req.headers["authorization"]
+  ) {
+    // Fordibben
+    res
+      .status(403)
+      .json("You don't have permission to acces, you're TOKEN is invalid");
+  } else {
+    // Split at the space
+    const bearer = bearerHead.split(" ");
+    // Get token from the array
+    const bearerToken = bearer[1];
+    // Se the token
+    req.token = bearerToken;
+
+    JWT.verify(req.token, process.env.SECRET_KEY, (err) => {
+      if (err) {
+        throw err;
+      } else {
+        // Next middleware
+        next();
+      }
+    });
   }
 }
